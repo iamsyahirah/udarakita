@@ -47,3 +47,19 @@ a:focus-visible { outline: 2px solid #c9eea2; outline-offset: 5px; border-radius
   z-index: 10;
 }
 .skip-link:focus { transform: translateY(0); }
+
+.control {
+  min-height: 48px;
+  border: 1px solid #4b5349;
+  border-radius: 14px;
+  background: #1b1e1b;
+  color: #f4f5ee;
+  font-size: 14px;
+}
+.control::placeholder { color: #aeb5aa; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: 0.55; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid #c9eea2;
+  outline-offset: 4px;
+}

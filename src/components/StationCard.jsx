@@ -1,7 +1,8 @@
+import { isOldObservation } from '../utils/stations.js'
 import { Clock3, MapPin } from 'lucide-react'
 import { airQualityCategory, displayText, observationTime, validIpu } from '../utils/airQuality.js'
 
-export default function StationCard({ station }) {
+export default function StationCard({ station, now }) {
   const ipu = validIpu(station.api)
   const time = observationTime(station.observedAt)
   const category = airQualityCategory(station.api, station.category)
@@ -17,6 +18,7 @@ export default function StationCard({ station }) {
         <p className={ipu === null ? 'text-2xl font-medium' : 'text-6xl font-medium tracking-tight tabular-nums'}>{ipu ?? 'Unavailable'}</p>
         <p className="mt-4 flex items-start gap-2 text-sm font-medium"><span className="mt-1 size-2 shrink-0 rounded-full bg-current" aria-hidden="true" />{category.label}</p>
       </div>
+      {isOldObservation(station.observedAt, now) && <p className="mt-4 text-xs text-yellow-200">Data may be outdated · over 3 hours old</p>}
       <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-muted"><Clock3 size={14} className="mt-0.5 shrink-0" aria-hidden="true" /><span>Observed<br />{time ? <><time dateTime={station.observedAt}>{time}</time> MYT</> : 'Observation time unavailable'}</span></p>
     </article>
   )
