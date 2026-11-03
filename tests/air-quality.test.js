@@ -1,7 +1,7 @@
 import { test, mock } from 'node:test'
 import assert from 'node:assert/strict'
 import { fetchAirQuality } from '../src/services/hazeApi.js'
-import { validIpu, observationTime } from '../src/utils/airQuality.js'
+import { validIpu, observationTime, airQualityCategory, latestObservation } from '../src/utils/airQuality.js'
 
 const fixture = { stations: [{ id: 'test', name: 'Test station', api: null }] }
 
@@ -70,4 +70,31 @@ test('function honors Retry-After without repeatedly requesting a failing provid
     assert.equal((await handler({ httpMethod: 'GET' })).statusCode, 503)
     assert.equal(calls, 1)
   } finally { fetchMock.mock.restore() }
+})
+
+
+test('fallback categories use every Malaysian IPU boundary', () => {
+  for (const [api, tone] of [[0, 'good'], [50, 'good'], [51, 'moderate'], [100, 'moderate'], [101, 'unhealthy'], [200, 'unhealthy'], [201, 'very-unhealthy'], [300, 'very-unhealthy'], [301, 'hazardous'], [500, 'hazardous']]) {
+    assert.equal(airQualityCategory(api).tone, tone, `IPU ${api}`)
+  }
+  assert.deepEqual(airQualityCategory(null), { label: 'Unavailable', tone: 'unavailable' })
+})
+
+test('provider category takes precedence and unknown categories stay neutral', () => {
+  assert.deepEqual(airQualityCategory(40, 'Moderate'), { label: 'Moderate', tone: 'moderate' })
+  assert.deepEqual(airQualityCategory(40, 'Tidak Sihat'), { label: 'Tidak Sihat', tone: 'unhealthy' })
+  assert.deepEqual(airQualityCategory(40, 'Provider status'), { label: 'Provider status', tone: 'unavailable' })
+  assert.equal(airQualityCategory(51, ' ').tone, 'moderate')
+  assert.deepEqual(airQualityCategory(null, 'Good'), { label: 'Good', tone: 'good' })
+})
+
+test('summary chooses latest valid station observation, respecting timezone offsets', () => {
+  assert.equal(latestObservation([]), null)
+  assert.equal(latestObservation([{ observedAt: null }, { observedAt: 'invalid' }]), null)
+  assert.equal(latestObservation([
+    { observedAt: '2026-11-04T01:00:00+08:00' },
+    { observedAt: 'invalid' },
+    { observedAt: '2026-11-03T18:00:00Z' },
+    { observedAt: null },
+  ]), '2026-11-03T18:00:00Z')
 })
