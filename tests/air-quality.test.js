@@ -13,7 +13,11 @@ test('service keeps nullable readings and passes request cancellation', async ()
     assert.equal(options.signal, controller.signal)
     return Response.json(fixture)
   })
-  try { assert.deepEqual(await fetchAirQuality({ signal: controller.signal }), fixture) }
+  try {
+    const { nextRequestAt, ...data } = await fetchAirQuality({ signal: controller.signal })
+    assert.deepEqual(data, fixture)
+    assert.ok(nextRequestAt > Date.now())
+  }
   finally { fetchMock.mock.restore() }
 })
 
