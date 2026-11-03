@@ -11,6 +11,7 @@ export default function Footer() {
         </nav>
       </div>
       <p className="mt-4">For official public-health advice, consult relevant Malaysian authorities.</p>
+      <p className="mt-5">Developed by <span className="font-medium text-lime">Syahirah</span></p>
     </footer>
   )
 }
