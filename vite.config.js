@@ -44,6 +44,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        importScripts: ['notification-events.js'],
         globPatterns: ['**/*.{js,css,html,png,svg}'],
         // API requests must reach the network; validated offline snapshots are
         // handled by the app so saved readings always carry an explicit notice.

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Download, MapPin, Bookmark, BellRing, Bell, Palette, Languages, Info, Database, LocateFixed, Check, ChevronRight, ShieldCheck, FileText, Wind } from 'lucide-react'
+import { Download, MapPin, Bookmark, BellRing, Palette, Languages, Info, Database, Check, ChevronRight, ShieldCheck, FileText, Wind } from 'lucide-react'
 import { clearSnapshot, readSnapshot } from '../services/offlineSnapshot.js'
+import SavedLocationsEditor from './SavedLocationsEditor.jsx'
+import AlertPreferences from './AlertPreferences.jsx'
 
 function SettingsGroup({ id, title, children }) {
   return <section aria-labelledby={id} className="settings-group">
@@ -22,7 +24,7 @@ function SettingsRow({ icon: Icon, tone = 'mint', title, description, planned = 
   </Row>
 }
 
-export default function SettingsPage({ pwa, location, result }) {
+export default function SettingsPage({ pwa, location, result, savedPlaces, notifications }) {
   const [snapshot, setSnapshot] = useState(readSnapshot)
   const [storageMessage, setStorageMessage] = useState('')
   const [locationMessage, setLocationMessage] = useState('')
@@ -39,15 +41,14 @@ export default function SettingsPage({ pwa, location, result }) {
   return <>
     <div className="settings-intro"><h1 className="page-title">Settings</h1></div>
     <div className="settings-layout">
-      <SettingsGroup id="alert-locations-heading" title="Alert locations">
-        <SettingsRow icon={LocateFixed} title="Alert location" description="Choose the place to watch for air quality alerts." planned />
-        <SettingsRow icon={Bookmark} tone="lavender" title="Saved locations" description="Save another place for alerts." planned />
+      <SettingsGroup id="alert-locations-heading" title="Saved locations">
+        <SettingsRow icon={Bookmark} title="Saved locations" description="Keep your monitoring stations on this device." />
+        <SavedLocationsEditor saved={savedPlaces} stations={result?.stations ?? []} />
       </SettingsGroup>
 
       <SettingsGroup id="notifications-heading" title="Notifications and alerts">
-        <SettingsRow icon={BellRing} tone="lavender" title="Notifications & alerts" description="Get an alert when air quality changes." planned action={<button type="button" role="switch" aria-checked="false" aria-label="Enable air quality alerts (coming later)" disabled className="settings-switch"><span /></button>} />
-        <SettingsRow icon={Bell} tone="mint" title="Send a test notification" description="Test notifications will be available with alerts." action={<button type="button" disabled className="settings-small-button" aria-label="Send a test notification (coming later)">Send</button>} />
-        <p className="settings-group-note">Notifications are not active yet. These options will be available in a future update.</p>
+        <SettingsRow icon={BellRing} tone="lavender" title="High-IPU alerts" description="Watch one station or all your saved locations." />
+        <AlertPreferences saved={savedPlaces} notifications={notifications} />
       </SettingsGroup>
 
       <SettingsGroup id="preferences-heading" title="Appearance and language">

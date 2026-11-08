@@ -44,12 +44,12 @@ export default function SettingsInfoPage({ page }) {
       </>}
       {page === 'privacy' && <InfoCard title="Your data stays yours">
         <p>GPS stays in memory on your device. We don’t save or send your coordinates to our server.</p>
-        <p>Readings are saved for offline use. Clear them in Settings, or remove all cached app data through your browser’s site-data controls.</p>
+        <p>Saved station names, alert preferences, notification history and offline readings stay on this device. Remove saved places or readings in Settings; your browser’s site-data controls clear all app data.</p>
         <p>No account or analytics scripts. Hosting and external services, including the MakaKami badge, may receive connection details under their own policies.</p>
       </InfoCard>}
       {page === 'disclaimer' && <InfoCard title="For general information">
         <p>UdaraKita is an independent viewer, not an official service or medical advice.</p>
-        <p>Station readings may be delayed, incomplete, or different from conditions where you are. Alerts are not active yet.</p>
+        <p>Station readings may be delayed, incomplete, or different from conditions where you are. Alerts check fresh readings only while the app is open. They are not an emergency warning service.</p>
         <p>Follow official Malaysian guidance for health and safety decisions.</p>
         <a href="https://www.doe.gov.my/">Visit DOE / JAS →</a>
       </InfoCard>}

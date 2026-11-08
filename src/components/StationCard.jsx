@@ -1,8 +1,8 @@
 import { isOldObservation } from '../utils/stations.js'
-import { Clock3, MapPin } from 'lucide-react'
+import { Bookmark, BookmarkCheck, Clock3, MapPin } from 'lucide-react'
 import { airQualityCategory, displayText, observationTime, validIpu } from '../utils/airQuality.js'
 
-export default function StationCard({ station, now }) {
+export default function StationCard({ station, now, savedPlaces }) {
   const ipu = validIpu(station.api)
   const time = observationTime(station.observedAt)
   const category = airQualityCategory(station.api, station.category)
@@ -20,6 +20,9 @@ export default function StationCard({ station, now }) {
       </div>
       {isOldObservation(station.observedAt, now) && <p className="mt-4 text-xs text-yellow-200">Data may be outdated · over 3 hours old</p>}
       <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-muted"><Clock3 size={14} className="mt-0.5 shrink-0" aria-hidden="true" /><span>Observed<br />{time ? <><time dateTime={station.observedAt}>{time}</time> MYT</> : 'Observation time unavailable'}</span></p>
+      {savedPlaces && <button type="button" onClick={() => savedPlaces.isSaved(station.id) ? savedPlaces.remove(station.id) : savedPlaces.save(station)} aria-pressed={savedPlaces.isSaved(station.id)} aria-label={`${savedPlaces.isSaved(station.id) ? 'Remove' : 'Save'} ${displayText(station.name, 'station')}${savedPlaces.isSaved(station.id) ? ' from saved locations' : ' to saved locations'}`} className="secondary-button mt-5 inline-flex items-center justify-center gap-2">
+        {savedPlaces.isSaved(station.id) ? <BookmarkCheck size={16} aria-hidden="true" /> : <Bookmark size={16} aria-hidden="true" />}{savedPlaces.isSaved(station.id) ? 'Saved' : 'Save location'}
+      </button>}
     </article>
   )
 }

@@ -6,7 +6,7 @@ import StateFilter from './StateFilter.jsx'
 import { filterStations, stationStates, freshnessMessage } from '../utils/stations.js'
 import { displayText } from '../utils/airQuality.js'
 
-export default function Dashboard({ airQuality, query, setQuery, state, setState, filtersPage = false }) {
+export default function Dashboard({ airQuality, query, setQuery, state, setState, savedPlaces, filtersPage = false }) {
   const { result, error, loading, load, now, notice, waitSeconds } = airQuality
   const stations = result?.stations ?? []
   const filtered = filterStations(stations, query, state)
@@ -53,7 +53,7 @@ export default function Dashboard({ airQuality, query, setQuery, state, setState
               <button type="button" onClick={resetFilters} className="mt-5 rounded-xl bg-lime px-4 py-3 text-sm font-medium text-ink">Clear filters</button>
             </div> : <ul aria-busy={loading} className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 sm:gap-5">
               {filtered.map((station, index) => (
-                <li key={`${displayText(station.id, 'station')}-${index}`} className="min-w-0"><StationCard station={station} now={now} /></li>
+                <li key={`${displayText(station.id, 'station')}-${index}`} className="min-w-0"><StationCard station={station} now={now} savedPlaces={savedPlaces} /></li>
               ))}
             </ul>}
           </>}
