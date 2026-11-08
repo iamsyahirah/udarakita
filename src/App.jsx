@@ -29,6 +29,6 @@ export default function App() {
     </main>
     <PwaControls pwa={pwa} />
     <Footer />
-    <PwaBottomBar page={page} standalone={pwa.standalone} />
+    <PwaBottomBar page={page} />
   </div>
 }

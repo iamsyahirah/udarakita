@@ -64,19 +64,30 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   outline-offset: 4px;
 }
 
-.pwa-bottom-space { height: calc(85px + env(safe-area-inset-bottom, 0px)); }
+.pwa-bottom-space { height: calc(110px + env(safe-area-inset-bottom, 0px)); }
 .pwa-bottom-bar {
   position: fixed;
-  inset: auto 0 0;
+  left: max(16px, env(safe-area-inset-left, 0px));
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  width: auto;
+  max-width: 440px;
+  margin-inline: auto;
   z-index: 20;
-  border-top: 1px solid #ffffff1a;
+  border: 1px solid #ffffff1a;
+  border-radius: 999px;
   background: #1b1e1b;
-  padding: 12px max(20px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+  padding: 7px;
+  box-shadow: 0 8px 32px #00000045;
 }
+.bottom-nav-active:hover { color: #151914; }
+.bottom-nav-link:hover { text-decoration: none; }
+.bottom-nav-link:focus-visible { border-radius: 999px; }
 
 @layer components {
-  .bottom-nav-link { @apply flex min-h-14 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[11px] font-medium no-underline; }
+  .bottom-nav-link { @apply flex min-h-16 min-w-0 flex-col items-center justify-center gap-1 rounded-full px-1 py-2 text-xs font-medium text-muted no-underline; }
   .bottom-nav-link:hover { text-decoration: none; }
+  .bottom-nav-active, .bottom-nav-active:hover { @apply bg-lime text-ink; }
   .page-intro { @apply py-10 sm:py-14; }
   .eyebrow { @apply mb-4 text-xs uppercase tracking-[0.18em] text-lime; }
   .page-title { @apply text-4xl font-medium tracking-tight sm:text-5xl; }
@@ -85,4 +96,26 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   .action-button { @apply min-h-11 rounded-xl bg-lime px-4 py-3 text-sm font-medium text-ink; }
   .secondary-button { @apply min-h-11 rounded-xl border border-white/20 px-4 py-3 text-sm; }
   .notice { @apply mb-5 rounded-2xl bg-yellow-200/10 p-5 text-sm leading-6 text-yellow-100; }
+  .settings-intro { @apply pt-9 pb-8 sm:pt-12 sm:pb-10; }
+  .settings-layout { @apply grid items-start gap-8 lg:grid-cols-2 lg:gap-9; }
+  .settings-group-title { @apply mb-3 px-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted; }
+  .settings-rows { @apply overflow-hidden rounded-[28px] bg-panel; }
+  .settings-row { @apply flex items-center gap-3.5 px-4 py-5 sm:px-5; }
+  .settings-row:not(:first-child) { @apply border-t border-white/10; }
+  .settings-icon { @apply flex size-12 shrink-0 items-center justify-center rounded-[18px]; }
+  .settings-icon-mint { @apply bg-lime/10 text-lime; }
+  .settings-icon-lavender { @apply bg-lavender/15 text-lavender; }
+  .settings-row-title { @apply text-base font-medium leading-6 tracking-tight; }
+  .settings-row-description { @apply mt-1 text-sm leading-5 text-muted; }
+  .settings-planned { @apply mt-2 inline-block rounded-full bg-white/5 px-2 py-0.5 text-[10px] leading-4 text-muted; }
+  .settings-row-action { @apply shrink-0; }
+  .settings-group-note { @apply border-t border-white/10 px-5 py-4 text-xs leading-6 text-muted; }
+  .settings-row-extra { @apply px-4 pb-5 sm:px-5; }
+  .settings-switch { @apply flex h-8 w-12 items-center rounded-full bg-white/10 p-1; }
+  .settings-switch span { @apply size-6 rounded-full bg-muted; }
+  .settings-small-button { @apply min-h-11 rounded-full bg-lavender/15 px-4 text-sm font-medium text-lavender; }
+  .install-instructions { @apply text-sm leading-6 text-muted; }
+  .install-instructions summary { @apply flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-lime; }
+  .install-instructions[open] summary svg { transform: rotate(90deg); }
+  .install-instructions p { @apply mt-3; }
 }
