@@ -4,6 +4,8 @@ import Header from './components/Header.jsx'
 import SummaryStrip from './components/SummaryStrip.jsx'
 import StationCard from './components/StationCard.jsx'
 import Footer from './components/Footer.jsx'
+import PwaControls from './components/PwaControls.jsx'
+import PwaBottomBar from './components/PwaBottomBar.jsx'
 import SearchBar from './components/SearchBar.jsx'
 import StateFilter from './components/StateFilter.jsx'
 import useAirQuality from './hooks/useAirQuality.js'
@@ -41,7 +43,7 @@ export default function App() {
             </div>
             <p className="text-xs text-muted">Malaysian Air Pollutant Index · API / IPU</p>
           </div>
-          <div className="mb-3 flex flex-col gap-4 sm:flex-row sm:items-end">
+          <div id="station-controls" className="mb-3 flex scroll-mt-5 flex-col gap-4 sm:flex-row sm:items-end">
             <SearchBar value={query} onChange={setQuery} />
             <StateFilter states={stationStates(stations)} value={state} onChange={setState} />
             <button type="button" onClick={load} disabled={loading || waitSeconds > 0} aria-describedby="refresh-guidance" className="flex min-h-12 items-center justify-center gap-2 rounded-[14px] bg-lime px-5 py-3.5 text-sm font-medium text-ink">
@@ -51,6 +53,7 @@ export default function App() {
           <p id="refresh-guidance" className="mb-6 text-xs leading-5 text-muted">{cooldown || (loading ? 'Requesting the latest available snapshot…' : 'Refresh requests a new snapshot when the provider cache allows.')} {waitSeconds > 0 && (error ? 'Retry is temporarily paused.' : 'Readings are cached to avoid excessive requests.')}</p>
           {!result && loading && <p role="status" className="flex items-center gap-3 rounded-[26px] bg-panel p-8 text-sm text-muted"><LoaderCircle className="animate-spin" size={18} aria-hidden="true" /> Loading station readings…</p>}
           {error && <div role="alert" className="mb-5 flex gap-3 rounded-2xl bg-yellow-200/10 p-5 text-sm leading-6 text-yellow-100"><CircleAlert className="shrink-0" size={20} aria-hidden="true" /><p>{error}{result && ' Showing the previously loaded snapshot; observations have not been updated.'}</p></div>}
+          {result?.offline && <p role="status" className="mb-5 rounded-2xl bg-yellow-200/10 p-5 text-sm leading-6 text-yellow-100">Connection unavailable. Showing saved readings from {new Intl.DateTimeFormat('en-MY', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Kuala_Lumpur' }).format(result.savedAt)} MYT. These are not live readings. Go online and refresh to update them.</p>}
           {freshness && <p role="status" className="mb-5 rounded-2xl bg-yellow-200/10 p-5 text-sm leading-6 text-yellow-100">{freshness}</p>}
           {result && <>
             <p role="status" className="mb-5 text-sm text-muted">Showing {filtered.length} of {stations.length} returned stations</p>
@@ -68,7 +71,9 @@ export default function App() {
 
         </section>
       </main>
+      <PwaControls />
       <Footer />
+      <PwaBottomBar />
     </div>
   )
 }

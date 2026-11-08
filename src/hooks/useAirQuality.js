@@ -23,7 +23,7 @@ export default function useAirQuality() {
       if (controller.signal.aborted) return
       setResult(data)
       allowedAt.current = data.nextRequestAt
-      setNotice('Snapshot loaded. Observation times show when stations reported their readings.')
+      setNotice(data.offline ? 'Showing saved readings while the connection is unavailable.' : 'Snapshot loaded. Observation times show when stations reported their readings.')
     } catch (error) {
       if (controller.signal.aborted) return
       setError(error.message || 'Unable to load station readings. Please try again later.')

@@ -1,3 +1,5 @@
+import { readSnapshot, saveSnapshot } from './offlineSnapshot.js'
+
 export const AIR_QUALITY_URL = '/.netlify/functions/air-quality'
 
 export function cacheLifetime(cacheControl) {
@@ -14,7 +16,15 @@ export function retryDeadline(value, now = Date.now()) {
 }
 
 export async function fetchAirQuality({ signal } = {}) {
-  const response = await fetch(AIR_QUALITY_URL, { headers: { Accept: 'application/json' }, signal })
+  let response
+  try {
+    response = await fetch(AIR_QUALITY_URL, { headers: { Accept: 'application/json' }, signal })
+  } catch (error) {
+    if (signal?.aborted || error.name === 'AbortError') throw error
+    const snapshot = readSnapshot()
+    if (snapshot) return snapshot
+    throw new Error('Unable to connect. Go online to load station readings; no saved snapshot is available yet.')
+  }
   if (!response.ok) {
     const error = new Error(`Haze Monitor is currently unavailable (HTTP ${response.status}). Please try again when retry is available.`)
     error.nextRequestAt = retryDeadline(response.headers.get('retry-after'))
@@ -23,9 +33,11 @@ export async function fetchAirQuality({ signal } = {}) {
   let data
   try { data = await response.json() } catch { throw new Error('Haze Monitor returned an unreadable response.') }
   if (!Array.isArray(data?.stations)) throw new Error('Haze Monitor returned an unexpected station response.')
-  return {
+  const result = {
     ...data,
     stations: data.stations.filter((station) => station && typeof station === 'object' && !Array.isArray(station)),
     nextRequestAt: Date.now() + cacheLifetime(response.headers.get('cache-control')),
   }
+  saveSnapshot(result)
+  return result
 }

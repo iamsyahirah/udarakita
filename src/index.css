@@ -63,3 +63,13 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   outline: 2px solid #c9eea2;
   outline-offset: 4px;
 }
+
+.pwa-bottom-space { height: calc(85px + env(safe-area-inset-bottom, 0px)); }
+.pwa-bottom-bar {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 20;
+  border-top: 1px solid #ffffff1a;
+  background: #1b1e1b;
+  padding: 12px max(20px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+}

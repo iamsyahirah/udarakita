@@ -21,6 +21,19 @@ npm run preview
 
 `npm run preview` serves the production bundle and the local API handler. Deploy the project through Netlify rather than uploading only `dist` to a generic static host: the serverless function is required for API access.
 
+## Installable app (PWA)
+
+Production builds use [Vite PWA](https://vite-pwa-org.netlify.app/guide/) to generate a manifest and service worker. The app includes standalone display, dark theme colours, 192px/512px icons, a maskable icon, and an Apple touch icon using the existing logo. Service workers require HTTPS (or localhost); they are disabled during `npm run dev`. Test with `npm run build` and `npm run preview`.
+
+- Chrome/Edge: use **Install app** when offered, or the browser's install menu.
+- iPhone/iPad: open in Safari, tap **Share → Add to Home Screen**.
+- Visit online once and allow the service worker to finish installing before testing offline. The app shell opens offline after that. A successful readings request saves a validated snapshot on the device. If a later network request fails, the app shows those readings with an explicit saved-data notice, saved time in MYT, and original observation times. With no saved readings, it asks you to connect. Reconnect and press Refresh to retrieve current data; it does not poll automatically.
+- API responses are not cached by the service worker. HTTP errors and cancelled requests keep their existing handling. Device storage is best effort; if it is blocked, full, or cleared, live access still works but offline readings may be unavailable. External badges and source links need a connection.
+- When an updated service worker is ready, **Update app** reloads into it; **Later** lets you continue. Netlify serves the worker and manifest with revalidation headers.
+- In the installed PWA, a fixed bottom bar offers **Search** and **Filter** shortcuts. Each scrolls to the existing controls and focuses the relevant field without resetting your filters. It supports standalone display and iOS home-screen mode, with space for the device's home indicator. The bar is hidden in regular browser tabs.
+
+PWA validation: production build and all 19 Node tests pass. Headless Chrome with a temporary regular profile reported no manifest or installability errors. Browser-only station fixtures verified offline shell reloads, saved readings, the no-snapshot message, and recovery after reconnecting. No page errors or horizontal overflow at 375px, 800px, or 1280px. Physical-device installation and deployed HTTPS verification remain pending. Dependency audit currently reports six advisories (two low, four moderate) through the PWA build tooling; no forced dependency downgrades were applied.
+
 ## Files and folders
 
 - `package.json`, `package-lock.json`: scripts and reproducible React, Vite, Tailwind, and Lucide dependencies.

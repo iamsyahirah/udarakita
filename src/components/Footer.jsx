@@ -12,6 +12,14 @@ export default function Footer() {
       </div>
       <p className="mt-4">For official public-health advice, consult relevant Malaysian authorities.</p>
       <p className="mt-5">Developed by <span className="font-medium text-lime">Syahirah</span></p>
+      <a className="mt-4 inline-block" href="https://makakami.com.my/app/udara-kita">
+        <img
+          src="https://makakami.com.my/badge/udara-kita.svg?theme=dark"
+          alt="Listed on MakaKami"
+          width="150"
+          height="40"
+        />
+      </a>
     </footer>
   )
 }
