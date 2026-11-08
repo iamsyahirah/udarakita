@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Download, MapPin, Bookmark, BellRing, Bell, Palette, Languages, Info, Database, LocateFixed, Check, ChevronRight } from 'lucide-react'
+import { Download, MapPin, Bookmark, BellRing, Bell, Palette, Languages, Info, Database, LocateFixed, Check, ChevronRight, ShieldCheck, FileText, Wind } from 'lucide-react'
 import { clearSnapshot, readSnapshot } from '../services/offlineSnapshot.js'
 
 function SettingsGroup({ id, title, children }) {
@@ -9,16 +9,17 @@ function SettingsGroup({ id, title, children }) {
   </section>
 }
 
-function SettingsRow({ icon: Icon, tone = 'mint', title, description, planned = false, action }) {
-  return <div className="settings-row">
+function SettingsRow({ icon: Icon, tone = 'mint', title, description, planned = false, action, href }) {
+  const Row = href ? 'a' : 'div'
+  return <Row className={`settings-row${href ? ' settings-link' : ''}`} href={href} aria-label={href ? title : undefined}>
     <span className={`settings-icon settings-icon-${tone}`}><Icon size={22} strokeWidth={1.7} aria-hidden="true" /></span>
     <div className="min-w-0 flex-1">
       <h3 className="settings-row-title">{title}</h3>
       <p className="settings-row-description">{description}</p>
       {planned && <span className="settings-planned">Coming later</span>}
     </div>
-    {action && <div className="settings-row-action">{action}</div>}
-  </div>
+    {(action || href) && <div className="settings-row-action">{action || <ChevronRight size={19} aria-hidden="true" className="text-muted" />}</div>}
+  </Row>
 }
 
 export default function SettingsPage({ pwa, location, result }) {
@@ -64,7 +65,13 @@ export default function SettingsPage({ pwa, location, result }) {
           </details>}
         </div>}
         {pwa.installMessage && <p role="status" className="settings-group-note">{pwa.installMessage}</p>}
-        <SettingsRow icon={Info} tone="lavender" title="About the data" description="Sources, index categories and observation times." planned />
+      </SettingsGroup>
+
+      <SettingsGroup id="about-heading" title="About">
+        <SettingsRow icon={Wind} title="About this app" description="Get to know UdaraKita." href="#about-app" />
+        <SettingsRow icon={Info} tone="lavender" title="About the data" description="Sources, observation times and credits." href="#about-data" />
+        <SettingsRow icon={ShieldCheck} title="Privacy & your data" description="Location, offline storage and connections." href="#privacy" />
+        <SettingsRow icon={FileText} tone="lavender" title="Disclaimer" description="What to know when using the readings." href="#disclaimer" />
       </SettingsGroup>
 
       <SettingsGroup id="device-heading" title="On this device">

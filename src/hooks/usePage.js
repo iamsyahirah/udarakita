@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 
-const pages = ['home', 'filters', 'places', 'settings']
+export const settingsInfoPages = ['about-app', 'about-data', 'privacy', 'disclaimer']
+const titles = {
+  home: 'Malaysia Air Quality Checker', filters: 'Filters', places: 'Places', settings: 'Settings',
+  'about-app': 'About this app', 'about-data': 'About the data', privacy: 'Privacy & your data', disclaimer: 'Disclaimer',
+}
+const pages = Object.keys(titles)
 const currentPage = () => pages.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home'
 
 export default function usePage() {
@@ -13,7 +18,7 @@ export default function usePage() {
     return () => window.removeEventListener('hashchange', change)
   }, [])
   useEffect(() => {
-    document.title = `${page === 'home' ? 'Malaysia Air Quality Checker' : page[0].toUpperCase() + page.slice(1)} — UdaraKita`
+    document.title = `${titles[page]} — UdaraKita`
     window.scrollTo(0, 0)
     document.getElementById('main-content')?.focus({ preventScroll: true })
   }, [page])

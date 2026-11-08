@@ -83,6 +83,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 .bottom-nav-active:hover { color: #151914; }
 .bottom-nav-link:hover { text-decoration: none; }
 .bottom-nav-link:focus-visible { border-radius: 999px; }
+.settings-link:hover { color: inherit; text-decoration: none; background: #ffffff05; }
+.settings-link:focus-visible { outline-offset: -3px; border-radius: 0; }
 
 @layer components {
   .bottom-nav-link { @apply flex min-h-16 min-w-0 flex-col items-center justify-center gap-1 rounded-full px-1 py-2 text-xs font-medium text-muted no-underline; }
@@ -118,4 +120,9 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   .install-instructions summary { @apply flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-lime; }
   .install-instructions[open] summary svg { transform: rotate(90deg); }
   .install-instructions p { @apply mt-3; }
+  .info-layout { @apply grid max-w-3xl gap-5; }
+  .info-card { @apply min-w-0 rounded-[28px] bg-panel p-5 text-sm leading-7 text-muted sm:p-7; }
+  .info-card h2 { @apply mb-4 text-lg font-medium leading-7 text-[#f4f5ee]; }
+  .info-card p + p { @apply mt-4; }
+  .info-card a { @apply text-lime; }
 }
