@@ -1,36 +1,21 @@
-import { useEffect, useState } from 'react'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { House, SlidersHorizontal, MapPin, Settings } from 'lucide-react'
 
-export default function PwaBottomBar() {
-  const [standalone, setStandalone] = useState(false)
+export const navigation = [
+  { page: 'home', label: 'Home', icon: House },
+  { page: 'filters', label: 'Filters', icon: SlidersHorizontal },
+  { page: 'places', label: 'Places', icon: MapPin },
+  { page: 'settings', label: 'Settings', icon: Settings },
+]
 
-  useEffect(() => {
-    const displayMode = window.matchMedia('(display-mode: standalone)')
-    const update = () => setStandalone(displayMode.matches || window.navigator.standalone === true)
-    update()
-    displayMode.addEventListener('change', update)
-    return () => displayMode.removeEventListener('change', update)
-  }, [])
-
+export default function PwaBottomBar({ page, standalone }) {
   if (!standalone) return null
-
-  const focusControl = (id) => {
-    document.getElementById(id)?.focus({ preventScroll: true })
-    document.getElementById('station-controls')?.scrollIntoView({ block: 'start' })
-  }
-
-  return (
-    <div className="pwa-bottom-space">
-      <nav aria-label="Station tools" className="pwa-bottom-bar">
-        <div className="mx-auto flex max-w-lg gap-3">
-          <button type="button" aria-controls="station-search" onClick={() => focusControl('station-search')} className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-lime px-4 py-3 text-sm font-medium text-ink">
-            <Search size={18} aria-hidden="true" /> Search
-          </button>
-          <button type="button" aria-controls="state-filter" onClick={() => focusControl('state-filter')} className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-white/20 px-4 py-3 text-sm font-medium">
-            <SlidersHorizontal size={18} aria-hidden="true" /> Filter
-          </button>
-        </div>
-      </nav>
-    </div>
-  )
+  return <div className="pwa-bottom-space md:hidden">
+    <nav aria-label="App navigation" className="pwa-bottom-bar md:hidden">
+      <div className="mx-auto grid max-w-lg grid-cols-4 gap-1">
+        {navigation.map(({ page: target, label, icon: Icon }) => <a key={target} href={`#${target}`} aria-current={page === target ? 'page' : undefined} className={`bottom-nav-link ${page === target ? 'bg-lime/10 text-lime' : 'text-muted'}`}>
+          <Icon size={21} aria-hidden="true" strokeWidth={page === target ? 2.2 : 1.7} /><span>{label}</span>
+        </a>)}
+      </div>
+    </nav>
+  </div>
 }

@@ -73,3 +73,16 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   background: #1b1e1b;
   padding: 12px max(20px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
 }
+
+@layer components {
+  .bottom-nav-link { @apply flex min-h-14 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[11px] font-medium no-underline; }
+  .bottom-nav-link:hover { text-decoration: none; }
+  .page-intro { @apply py-10 sm:py-14; }
+  .eyebrow { @apply mb-4 text-xs uppercase tracking-[0.18em] text-lime; }
+  .page-title { @apply text-4xl font-medium tracking-tight sm:text-5xl; }
+  .page-description { @apply mt-4 max-w-xl text-sm leading-6 text-muted; }
+  .settings-card { @apply rounded-[26px] bg-panel p-5 sm:p-7; }
+  .action-button { @apply min-h-11 rounded-xl bg-lime px-4 py-3 text-sm font-medium text-ink; }
+  .secondary-button { @apply min-h-11 rounded-xl border border-white/20 px-4 py-3 text-sm; }
+  .notice { @apply mb-5 rounded-2xl bg-yellow-200/10 p-5 text-sm leading-6 text-yellow-100; }
+}

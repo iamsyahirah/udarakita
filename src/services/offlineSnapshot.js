@@ -1,5 +1,9 @@
 const SNAPSHOT_KEY = 'udarakita:air-quality:v1'
 
+export function clearSnapshot() {
+  try { localStorage.removeItem(SNAPSHOT_KEY); return true } catch { return false }
+}
+
 export function saveSnapshot(data) {
   try {
     localStorage.setItem(SNAPSHOT_KEY, JSON.stringify({ data, savedAt: Date.now() }))
