@@ -7,13 +7,13 @@ export function displayText(value, fallback) {
   return typeof value === 'string' && value.trim() ? value.trim() : fallback
 }
 
-const formatter = new Intl.DateTimeFormat('en-MY', {
+const formatters = Object.fromEntries(['en-MY', 'ms-MY'].map(locale => [locale, new Intl.DateTimeFormat(locale, {
   dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Kuala_Lumpur',
-})
+})]))
 
-export function observationTime(value) {
+export function observationTime(value, locale = 'en-MY') {
   if (typeof value !== 'string' || !Number.isFinite(Date.parse(value))) return null
-  return formatter.format(new Date(value))
+  return (formatters[locale] || formatters['en-MY']).format(new Date(value))
 }
 
 const categories = [

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from '../contexts/AppPreferences.jsx'
 import { highIpuAlerts } from '../utils/alerts.js'
 import { readAlertHistory, rememberAlert, showAppNotification } from '../services/notifications.js'
 import { observationTime } from '../utils/airQuality.js'
@@ -6,6 +7,7 @@ import { observationTime } from '../utils/airQuality.js'
 const permissionState = () => 'Notification' in window && window.isSecureContext ? Notification.permission : 'unsupported'
 
 export default function useIpuAlerts(airQuality, saved) {
+  const { t, locale } = useTranslation()
   const [permission, setPermission] = useState(permissionState)
   const [visible, setVisible] = useState(() => document.visibilityState === 'visible')
   const [message, setMessage] = useState('')
@@ -15,7 +17,7 @@ export default function useIpuAlerts(airQuality, saved) {
   if (!history.current) history.current = readAlertHistory()
   const alerts = airQuality.error || airQuality.loading ? [] : highIpuAlerts(airQuality.result, saved, airQuality.now)
   const active = useRef(null)
-  active.current = { saved, permission, airQuality }
+  active.current = { saved, permission, airQuality, t, locale }
 
   useEffect(() => {
     const sync = () => { setPermission(permissionState()); setVisible(document.visibilityState === 'visible') }
@@ -39,7 +41,7 @@ export default function useIpuAlerts(airQuality, saved) {
             if (!highIpuAlerts(latest.airQuality.result, latest.saved).some(current => current.key === alert.key)) return
             const persisted = readAlertHistory()
             if (persisted.has(alert.key)) { history.current.add(alert.key); return }
-            await showAppNotification(`${alert.name} · IPU ${alert.api}`, `High-IPU alert · observed ${observationTime(alert.observedAt)} MYT.`, `ipu-${alert.id}`)
+            await showAppNotification(`${alert.name} · IPU ${alert.api}`, latest.t('High-IPU alert · observed {time} MYT.', { time: observationTime(alert.observedAt, latest.locale) }), `ipu-${alert.id}`)
             rememberAlert(persisted, alert.key)
             history.current = persisted
           }
@@ -71,7 +73,7 @@ export default function useIpuAlerts(airQuality, saved) {
   const test = async () => {
     setBusy(true)
     try {
-      await showAppNotification('UdaraKita · test notification', 'Notifications are ready. High-IPU checks run while the app is open.', 'udarakita-test')
+      await showAppNotification(t('UdaraKita · test notification'), t('Notifications are ready. High-IPU checks run while the app is open.'), 'udarakita-test')
       setMessage('Test notification sent.')
     } catch { setMessage('The test notification could not be shown. Check your browser or device permissions.') }
     finally { setBusy(false) }

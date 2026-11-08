@@ -3,22 +3,32 @@
 @theme {
   --color-lime: #c9eea2;
   --color-panel: #1b1e1b;
+  --color-accent: #c9eea2;
+  --color-accent-alt: #c6a7ef;
+  --color-foreground: #f4f5ee;
+  --color-canvas: #101210;
+  --color-line: #ffffff1a;
+  --color-line-strong: #ffffff33;
+  --color-soft: #ffffff0d;
+  --color-warning-surface: color-mix(in oklab, var(--color-yellow-200) 10%, transparent);
+  --color-warning: var(--color-yellow-100);
+  --color-caution: var(--color-yellow-200);
   --color-muted: #aeb5aa;
   --font-sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
 }
 
 :root {
   font-family: var(--font-sans);
-  color: #f4f5ee;
-  background: #101210;
+  color: var(--color-foreground);
+  background: var(--color-canvas);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 body { margin: 0; min-width: 320px; }
 a { text-underline-offset: 4px; }
-a:hover { color: #c9eea2; text-decoration: underline; }
-a:focus-visible { outline: 2px solid #c9eea2; outline-offset: 5px; border-radius: 2px; }
+a:hover { color: var(--color-accent); text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; border-radius: 2px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; }
 }
@@ -50,17 +60,17 @@ a:focus-visible { outline: 2px solid #c9eea2; outline-offset: 5px; border-radius
 
 .control {
   min-height: 48px;
-  border: 1px solid #4b5349;
+  border: 1px solid var(--control-border, #4b5349);
   border-radius: 14px;
-  background: #1b1e1b;
-  color: #f4f5ee;
+  background: var(--color-panel);
+  color: var(--color-foreground);
   font-size: 14px;
 }
-.control::placeholder { color: #aeb5aa; }
+.control::placeholder { color: var(--color-muted); }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: 0.55; }
 button:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 2px solid #c9eea2;
+  outline: 2px solid var(--color-accent);
   outline-offset: 4px;
 }
 
@@ -74,16 +84,16 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   max-width: 440px;
   margin-inline: auto;
   z-index: 20;
-  border: 1px solid #ffffff1a;
+  border: 1px solid var(--color-line);
   border-radius: 999px;
-  background: #1b1e1b;
+  background: var(--color-panel);
   padding: 7px;
-  box-shadow: 0 8px 32px #00000045;
+  box-shadow: 0 8px 32px var(--nav-shadow, #00000045);
 }
 .bottom-nav-active:hover { color: #151914; }
 .bottom-nav-link:hover { text-decoration: none; }
 .bottom-nav-link:focus-visible { border-radius: 999px; }
-.settings-link:hover { color: inherit; text-decoration: none; background: #ffffff05; }
+.settings-link:hover { color: inherit; text-decoration: none; background: var(--hover-surface, #ffffff05); }
 .settings-link:focus-visible { outline-offset: -3px; border-radius: 0; }
 
 @layer components {
@@ -91,38 +101,56 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   .bottom-nav-link:hover { text-decoration: none; }
   .bottom-nav-active, .bottom-nav-active:hover { @apply bg-lime text-ink; }
   .page-intro { @apply py-10 sm:py-14; }
-  .eyebrow { @apply mb-4 text-xs uppercase tracking-[0.18em] text-lime; }
+  .eyebrow { @apply mb-4 text-xs uppercase tracking-[0.18em] text-accent; }
   .page-title { @apply text-4xl font-medium tracking-tight sm:text-5xl; }
   .page-description { @apply mt-4 max-w-xl text-sm leading-6 text-muted; }
   .settings-card { @apply rounded-[26px] bg-panel p-5 sm:p-7; }
   .action-button { @apply min-h-11 rounded-xl bg-lime px-4 py-3 text-sm font-medium text-ink; }
-  .secondary-button { @apply min-h-11 rounded-xl border border-white/20 px-4 py-3 text-sm; }
-  .notice { @apply mb-5 rounded-2xl bg-yellow-200/10 p-5 text-sm leading-6 text-yellow-100; }
+  .secondary-button { @apply min-h-11 rounded-xl border border-line-strong px-4 py-3 text-sm; }
+  .notice { @apply mb-5 rounded-2xl bg-warning-surface p-5 text-sm leading-6 text-warning; }
   .settings-intro { @apply pt-9 pb-8 sm:pt-12 sm:pb-10; }
   .settings-layout { @apply grid items-start gap-8 lg:grid-cols-2 lg:gap-9; }
   .settings-group-title { @apply mb-3 px-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted; }
   .settings-rows { @apply overflow-hidden rounded-[28px] bg-panel; }
   .settings-row { @apply flex items-center gap-3.5 px-4 py-5 sm:px-5; }
-  .settings-row:not(:first-child) { @apply border-t border-white/10; }
+  .settings-row:not(:first-child) { @apply border-t border-line; }
   .settings-icon { @apply flex size-12 shrink-0 items-center justify-center rounded-[18px]; }
-  .settings-icon-mint { @apply bg-lime/10 text-lime; }
-  .settings-icon-lavender { @apply bg-lavender/15 text-lavender; }
+  .settings-icon-mint { @apply bg-lime/10 text-accent; }
+  .settings-icon-lavender { @apply bg-lavender/15 text-accent-alt; }
   .settings-row-title { @apply text-base font-medium leading-6 tracking-tight; }
   .settings-row-description { @apply mt-1 text-sm leading-5 text-muted; }
-  .settings-planned { @apply mt-2 inline-block rounded-full bg-white/5 px-2 py-0.5 text-[10px] leading-4 text-muted; }
+  .settings-planned { @apply mt-2 inline-block rounded-full bg-soft px-2 py-0.5 text-[10px] leading-4 text-muted; }
   .settings-row-action { @apply shrink-0; }
-  .settings-group-note { @apply border-t border-white/10 px-5 py-4 text-xs leading-6 text-muted; }
+  .settings-group-note { @apply border-t border-line px-5 py-4 text-xs leading-6 text-muted; }
   .settings-row-extra { @apply px-4 pb-5 sm:px-5; }
   .settings-switch { @apply flex h-8 w-12 items-center rounded-full bg-white/10 p-1; }
   .settings-switch span { @apply size-6 rounded-full bg-muted; }
-  .settings-small-button { @apply min-h-11 rounded-full bg-lavender/15 px-4 text-sm font-medium text-lavender; }
+  .settings-small-button { @apply min-h-11 rounded-full bg-lavender/15 px-4 text-sm font-medium text-accent-alt; }
   .install-instructions { @apply text-sm leading-6 text-muted; }
-  .install-instructions summary { @apply flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-lime; }
+  .install-instructions summary { @apply flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-accent; }
   .install-instructions[open] summary svg { transform: rotate(90deg); }
   .install-instructions p { @apply mt-3; }
   .info-layout { @apply grid max-w-3xl gap-5; }
   .info-card { @apply min-w-0 rounded-[28px] bg-panel p-5 text-sm leading-7 text-muted sm:p-7; }
-  .info-card h2 { @apply mb-4 text-lg font-medium leading-7 text-[#f4f5ee]; }
+  .info-card h2 { @apply mb-4 text-lg font-medium leading-7 text-foreground; }
   .info-card p + p { @apply mt-4; }
-  .info-card a { @apply text-lime; }
+  .info-card a { @apply text-accent; }
+}
+
+:root[data-theme="light"] {
+  --color-panel: #ffffff;
+  --color-canvas: #f3f5f0;
+  --color-foreground: #172018;
+  --color-muted: #596354;
+  --color-accent: #35631f;
+  --color-accent-alt: #75509f;
+  --color-line: #1720181a;
+  --color-line-strong: #17201833;
+  --color-soft: #1720180d;
+  --color-warning-surface: #fff3cd;
+  --color-warning: #704d00;
+  --color-caution: #704d00;
+  --control-border: #c7cfc1;
+  --nav-shadow: #17201821;
+  --hover-surface: #17201805;
 }
