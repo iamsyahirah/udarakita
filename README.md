@@ -1,6 +1,6 @@
 # UdaraKita
 
-A lightweight Malaysia Air Quality Checker built with React, Vite, Tailwind CSS, and Lucide React. This delivery covers **Milestones 1–3**: setup, real data access, a responsive station dashboard, combined filters, manual refresh/retry, and stale-data handling.
+A lightweight Malaysia Air Quality Checker built with React, Vite, Tailwind CSS, and Lucide React. 
 
 ## Run locally
 
